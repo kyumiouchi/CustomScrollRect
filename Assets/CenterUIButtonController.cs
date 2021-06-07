@@ -12,32 +12,44 @@ public class CenterUIButtonController : MonoBehaviour
     Collider2D m_LastObject;
 
     [SerializeField]
-    ScrollRect m_ActiveContentPanel;
+    ScrollRect m_ActiveScrollRectPanel;
 
     [SerializeField]
-    ScrollRect m_InactiveContentPanel;
+    ScrollRect m_InactiveScrollRectPanel;
+
+    [SerializeField]
+    RectTransform m_InactiveContent;
+
+    [SerializeField]
+    RectTransform m_ActiveContent;
 
     [SerializeField]
     RectTransform m_FirstInactiveDummy;
 
+    [SerializeField]
     RectTransform m_FirstActiveItem;
 
     Coroutine m_CenterRoutine;
 
     bool m_AllowMovement;
 
-    // Start is called before the first frame update
-    void Start()
+    float m_PanelSizeRatio;
+
+    float m_PageStep;
+
+    int m_ActivePanelIndex = 0;
+
+    private void Start()
     {
-        
+        m_PanelSizeRatio = 1321.4f / 361.4f;
+        m_PageStep = 1 / m_PanelSizeRatio;
     }
-    [Range(0,1)]
-    public float test;
+
     // Update is called once per frame
     void Update()
     {
         //m_InactiveContentPanel.horizontalNormalizedPosition = test;
-        m_InactiveContentPanel.horizontalNormalizedPosition = m_ActiveContentPanel.horizontalNormalizedPosition;
+        m_InactiveScrollRectPanel.horizontalNormalizedPosition = (m_ActivePanelIndex * m_PageStep) + (m_PageStep * m_ActiveScrollRectPanel.horizontalNormalizedPosition);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -52,21 +64,6 @@ public class CenterUIButtonController : MonoBehaviour
         Animator buttonAnim = other.GetComponent<Animator>();
         buttonAnim.SetBool("IsSelected", true);
         m_LastObject = other;
-    }
-
-    public void OnDragStarted(BaseEventData evt)
-    {
-        StopCoroutine(m_CenterRoutine);
-    }
-
-    public void OnDragging(BaseEventData evt)
-    {
-
-    }
-
-    public void OnDragEnded(BaseEventData evt)
-    {
-        m_CenterRoutine = StartCoroutine(CenterItem());
     }
 
     IEnumerator CenterItem()
