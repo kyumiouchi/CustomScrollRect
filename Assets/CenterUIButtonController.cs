@@ -31,12 +31,13 @@ public class CenterUIButtonController : MonoBehaviour
     {
         
     }
-
+    [Range(0,1)]
+    public float test;
     // Update is called once per frame
     void Update()
     {
-        m_InactiveContentPanel.normalizedPosition = m_ActiveContentPanel.normalizedPosition;
-
+        //m_InactiveContentPanel.horizontalNormalizedPosition = test;
+        m_InactiveContentPanel.horizontalNormalizedPosition = m_ActiveContentPanel.horizontalNormalizedPosition;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
